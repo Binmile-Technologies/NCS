@@ -1,0 +1,30 @@
+<div class="card">
+    <a href="{{article.link}}" target="_blank">
+        <div class="card-image">
+        <div class="check-container">
+            <div class="image-overlay">
+                <input type="checkbox"  id="cb3{{article.guid}}" (change)="onCheckboxChange($event, article)"/>
+                <label for="cb3{{article.guid}}"></label>
+                <p *ngIf="article.is_used || (isUsed.includes(article.guid))">
+                This article has been used for this contact. 
+                </p>
+            </div>
+        <!-- <img src="{{article.image}}" class="card-img-top" alt="..." > -->
+        <img *ngIf="article.image; else notShow" src="{{article.image}}" class="card-img-top" alt="..." >
+
+        <ng-template #notShow>
+          <!-- <img  src="../../assets/Images/image-mini3.svg" class="card-img-top-none" alt="..."> -->
+          <img  src="..//WebResources/ncs_DefaultImage" class="card-img-top-none" alt="...">
+          
+        </ng-template>
+        </div>
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">{{article.title | slice:0:65}}</h5>
+        <p class="card-text">{{article.body | slice:0:72}}</p>
+        </div>
+        <div class="card-footer">
+        <!-- Based on <strong class="text-uppercase">{{article.reason}}</strong> -->
+        </div>
+    </a>
+</div>

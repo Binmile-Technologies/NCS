@@ -1,0 +1,31 @@
+<router-outlet></router-outlet>
+<div><span></span></div>
+<div class="mt-5" >
+		<h2 class="app-subtitle">
+			
+				</h2>
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link active" data-toggle="tab" href="#engagement" id="tabengagement" >Engagement</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" href="#contacts" id="tabcontacts" >Contacts</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" href="#content" id="tabcontent" >Content</a>
+	</li>
+
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content" style="height: auto">
+<div class="tab-pane active" id="engagement">
+<app-analytics-engagement ></app-analytics-engagement>
+</div>
+<div class="tab-pane  fade" id="contacts">
+<app-analytics-contacts ></app-analytics-contacts>
+</div>
+<div class="tab-pane  fade" id="content">
+<app-analytics-content ></app-analytics-content>
+</div>
+</div>

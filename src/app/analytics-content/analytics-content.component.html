@@ -1,0 +1,31 @@
+<div>
+        <div class="spinner" ng-if="fetchingData">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+        <div class="table-outer-wrapper" ng-if="!fetchingData">
+          <div class="table-inner-wrapper">
+            <table class="table table-bordered" cellspacing="0" cellpadding="0" border="1">
+              <thead>
+                <tr>
+                  <th *ngFor="let column of columns ; let i = index"  class="table-cell">{{column}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of rows  ; let j = index">
+                  <td>
+                    <p class="name"><a target="_blank" href="{{row.content.content_link}}">{{row.content.content_title}}</a></p>
+                  </td>
+                  <td *ngFor="let group of contactGroups  ; let k = index">
+                    <span class="content-sent" *ngIf="wasContentSentToThisContactGroup(group, row.contactGroups)">
+                      <i class="fa fa-check"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      

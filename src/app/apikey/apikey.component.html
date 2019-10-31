@@ -1,0 +1,32 @@
+<!-- <router-outlet></router-outlet>
+<div><span></span></div>
+<button (click)="openmodal('analyticsapikey')">Close</button>
+<jw-modal id='analyticsapikey'>
+        <div class="lead">
+                <h5>Provide API key to proceed</h5>
+                <p>API key can be found under Settings > Organization in NewsCred CMP</p>
+              </div>
+              <div class="input-wrapper">
+                    <input id="inputkey" type="text" class="input-text" ngModel="{{APIKey}}" required >
+                    <a class="button" ngClass="{disabled: isWorking || input.error || input.apiKey.length === 0}" (click)="saveApiKey()">Submit</a>
+                  </div>
+                  <p *ngIf="isError" class="error-text" > {{ErrorMessage}}</p>
+</jw-modal>
+
+  -->
+  <router-outlet></router-outlet>
+<div><span></span></div>
+<button (click)="openmodal('analyticsapikey')">Close</button>
+<jw-modal id='analyticsapikey'>
+        <div class="lead">
+                <h5>Provide API key to proceed</h5>
+                <p>API key can be found under Settings > Organization in NewsCred CMP</p>
+              </div>
+              <div class="input-wrapper">
+                    <input id="inputkey" type="text" class="search-input input-text" ngModel="{{APIKey}}" required >
+                    <a class="button search-input-btn button small" ngClass="{disabled: isWorking || input.error || input.apiKey.length === 0}" (click)="saveApiKey()">Submit</a>
+                  </div>
+                  <p *ngIf="isError" class="error-text" > {{ErrorMessage}}</p>
+</jw-modal>
+
+ 

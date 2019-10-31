@@ -1,0 +1,59 @@
+<div class="contact-analytics">
+      
+      
+  <div class="table-outer-wrapper" ng-if="!fetchingData">
+    <div class="table-inner-wrapper">
+       <table class="table" cellspacing="0" cellpadding="0" >
+        <thead>
+          <tr>
+             
+                  <th *ngFor="let column of columns ; let i = index" class="table-cell">{{column}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows  ; let j = index">
+            <td *ngFor="let col of row">
+              
+              <p class="contact-url" *ngIf="col.name" >
+                <a style="cursor: pointer" (click)="fetchContactDetails(col.id)"  >
+                  {{col.name}} ({{col.read_contents.length}} <span class="highlight">of {{col.sent_contents.length}}</span>)
+                </a>
+                
+              </p>
+              <jw-modal id="contactdetails">
+                <table class="table table-bordered" cellspacing="0" cellpadding="0" border="1">
+                  <thead>
+                  <tr>
+                    <th *ngFor="let column of columnsdetails" class="table-cell">{{column}}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let row of rowsdetail ; let i = index">
+                    <td>
+                      <p class="name">{{row.content_title}}</p>
+                    </td>
+                    <td>
+                      <p class="name">{{row.sent_at}}</p>
+                    </td>
+                    <td>
+                      <p class="name">{{row.read_at}}</p>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+                <button (click)="closeModal('contactdetails');">Close</button>
+              </jw-modal>
+             
+              <p class="contact-url" *ngIf="col.contact_page_url">
+                <a href="{{col.contact_page_url}}" target="_blank" title="Open this Contact">
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </p>
+            </td>
+          </tr> 
+       </tbody>
+      </table> 
+    </div>
+  </div> 
+  <!-- <contact-analytics-details-modal-directive selected-contact="selectedContact" ng-if="showContactDetails"></contact-analytics-details-modal-directive> -->
+</div>

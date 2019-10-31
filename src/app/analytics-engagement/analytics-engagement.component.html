@@ -1,0 +1,28 @@
+<div class="table-outer-wrapper">
+  <!-- {{DeveloperName}} -->
+  <div class="table-inner-wrapper" >
+    <table class="table" cellspacing="0" cellpadding="0" >
+      <thead>
+      <tr>
+        <th class="first-column"></th>
+        <th *ngFor="let column of columns ; let i = index" class="table-cell">{{column}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let row of rows  ; let i = index">
+        <td class="table-cell">{{row.name}}</td>
+        <td *ngFor="let column of columns  ; let j = index">
+          <p>
+            {{row.values[column]}}
+            <span class="highlight" *ngIf="row.additional_values[column]">{{row.additional_values[column]}}</span>
+          </p>
+          <p class="progress-bar" *ngIf="row.bar_lengths[column] !== undefined">
+            
+            <span class="progress" [ngClass]="getProgressBarStyle(row.bar_lengths[column])" [style.width]="row.bar_lengths[column] + '%'"></span>
+          </p>
+        </td>  
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
