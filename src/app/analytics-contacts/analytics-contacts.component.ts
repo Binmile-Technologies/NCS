@@ -4,6 +4,7 @@ import { ModalService } from '../modal';
 
 import { zip } from "rxjs";
 import { DynamicCRMInfo } from 'src/services/dynamicCRM';
+declare var $: any;
 
 @Component({
   selector: 'app-analytics-contacts',
@@ -32,48 +33,17 @@ export class AnalyticsContactsComponent implements OnInit {
   }
 
   _formatTableData(response) {
-    // this.rows = []
-    // this.columns = []
+    if(response.length >0)
+    {
+     $("#divContact").css("visibility", "visible");
+     $("#divNoContact").css("visibility", "hidden");
+    } 
+    else
+    {
+     $("#divNoContact").css("visibility", "visible");
+     $("#divContact").css("visibility", "hidden");
     
-    // for (var i = 0; i < response.length; i++) {
-    //   var maxRows = 0;
-    //   var contact = response[i];
-    //   //Create Column
-    //   if (contact.contacts && contact.contacts.length > maxRows) {
-
-    //     maxRows = contact.contacts.length;
-
-    //     var columnName = contact['contact_group_title'];
-    //     this.columns.push(columnName);
-    //   }
-
-    //   let count = 0;
-    //    for (var k = 0; k < maxRows; k++) {
-        
-    //       var row = [];
-    //       for (var j = 0; j < response.length; j++) {
-    //        var contact = response[j];
-
-    //         if (contact.contacts && k < contact.contacts.length) {
-    //           row.push(contact.contacts[k]);
-    //           var dynamicsurl = this.dynamicCRMInfo.GetDynamicsURL();
-    //           contact.contacts[k].contact_page_url = dynamicsurl+ "/main.aspx?pagetype=entityrecord&etn=contact&id="+ contact.contacts[k].id;
-    //           if (contact.contacts[k].sent_contents.length === 0) {
-    //             contact.contacts[k].hasNoContent = true;
-    //           }
-    //         } 
-    //         else {
-    //           row.push({ id: count++ });
-    //         }
-            
-    //       }
-    //       this.rows.push(row);
-      
-
-    //   }
-
-
-    // }
+    }
     this.rows = [];
         this.columns = [];
         var maxRows = 0;
@@ -108,13 +78,7 @@ export class AnalyticsContactsComponent implements OnInit {
 
 
   fetchContactDetails(id: string) {
-    //   zip(this.apiService.getContactDetails())
-    //   .subscribe(([response]) => {
-
-    //     alert(response.result_set);
-    //     this._formatDetailsTableData(response.result_set);
-    //   }, (err) => { alert("error")
-    // });
+  
 
     this.apiService.getContactDetails(id)
       .subscribe((data) => {
@@ -148,9 +112,21 @@ export class AnalyticsContactsComponent implements OnInit {
       'Read Time'
     ];
     this.modalService.open('contactdetails');
+    $("#divModal").css('width','80%')
+    $("#divModal").css('margin-top','-21rem')
+    $("#divModal").css('overflow-x','hidden')
+  
   }
 
   closeModal(id: string) {
     this.modalService.close(id);
   }
+
+
+  ngAfterViewInit() {
+   
+    
+   
+  }
+ 
 }

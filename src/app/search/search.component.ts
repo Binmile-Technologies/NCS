@@ -35,7 +35,7 @@ export class SearchComponent implements OnInit {
     this.loading = true;
     this.apiService.searchArticles(this.query)
     .subscribe(data => {
-      this.articles = data.result_set;
+      this.articles = this._sanitizeImageUrls(data.result_set);
       this.loading = false;
       if(this.articles.length<=0)
       {
@@ -56,11 +56,35 @@ export class SearchComponent implements OnInit {
   handleSelectionChange(event){
     this.searchSelectionChanged.emit(event);
   }
+  _sanitizeImageUrls(articles) {
 
+    var expectedImageUrlPattern = /^(https:\/\/images[0-9]{1}.newscred.com\/[a-zA-Z0-9]{46}==)/;
+
+    articles.forEach(function (article) {
+
+      var matches = expectedImageUrlPattern.exec(article.image);
+
+      if (matches) {
+
+        var originalUrl = matches[0];
+
+        article.image = originalUrl + '?width=300';
+
+      }
+
+    });
+
+
+
+    return articles;
+
+  }
   handleKeyDownInput(event) {
     if (event.key === 'Enter') {
       this.handleSearch();
     }
   }
 
+  
+ 
 }

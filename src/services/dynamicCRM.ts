@@ -7,11 +7,13 @@ declare var $: any;
 export class DynamicCRMInfo {
     public defaultData = {
         contact: {
-            accountName: 'NewsCred',
+            accountName: '',
             email: 'rahul@newscred.com',
             id: '00000123',
             industry: '',
-            name: 'Rahul'
+            name: 'Rahul',
+            contactTitle:'',
+            dynamicsURL:'https://newscred.crm.dynamics.com/'
         },
         currentUserEmail: 'rahul@newscred.com',
         currentUserName: 'Rahul Rathore',
@@ -129,14 +131,24 @@ export class DynamicCRMInfo {
         let currentRecord = parentXrm.Page.data.entity.getId().replace("{", "").replace("}", "");
 
         if (entityName == "contact") {
-            if (parentXrm.Page.getAttribute("firstname") != undefined && parentXrm.Page.getAttribute("firstname") != null && parentXrm.Page.getAttribute("firstname") != "") {
+            if (parentXrm.Page.getAttribute("firstname").getValue() != undefined && parentXrm.Page.getAttribute("firstname").getValue() != null && parentXrm.Page.getAttribute("firstname").getValue() != "") {
                 name += parentXrm.Page.getAttribute("firstname").getValue();
             }
-            if (parentXrm.Page.getAttribute("lastname") != undefined && parentXrm.Page.getAttribute("lastname") != null && parentXrm.Page.getAttribute("lastname") != "") {
+            if (parentXrm.Page.getAttribute("lastname").getValue() != undefined && parentXrm.Page.getAttribute("lastname").getValue() != null && parentXrm.Page.getAttribute("lastname").getValue() != "") {
                 name += " " + parentXrm.Page.getAttribute("lastname").getValue();
             }
-            if (parentXrm.Page.getAttribute("emailaddress1") != undefined && parentXrm.Page.getAttribute("emailaddress1") != null && parentXrm.Page.getAttribute("emailaddress1") != "") {
+            if (parentXrm.Page.getAttribute("emailaddress1").getValue() != undefined && parentXrm.Page.getAttribute("emailaddress1").getValue() != null && parentXrm.Page.getAttribute("emailaddress1").getValue() != "") {
                 email = parentXrm.Page.getAttribute("emailaddress1").getValue();
+            }
+            if(parentXrm.Page.getAttribute("parentcustomerid").getValue()!=undefined && parentXrm.Page.getAttribute("parentcustomerid").getValue()!=null && parentXrm.Page.getAttribute("parentcustomerid").getValue()!="")
+            {
+                this.defaultData.contact.accountName=parentXrm.Page.getAttribute("parentcustomerid").getValue()[0].name;
+                let accountId=parentXrm.Page.getAttribute("parentcustomerid").getValue()[0].id.replace("{", "").replace("}", "");
+                this.defaultData.contact.industry = this.getIndustory(accountId);
+            }
+            if(parentXrm.Page.getAttribute("jobtitle").getValue()!=undefined && parentXrm.Page.getAttribute("jobtitle").getValue()!=null && parentXrm.Page.getAttribute("jobtitle").getValue()!="")
+            {
+                this.defaultData.contact.contactTitle=parentXrm.Page.getAttribute("jobtitle").getValue();
             }
             recordName = name;
             contactName = name;
@@ -150,13 +162,20 @@ export class DynamicCRMInfo {
                 name = parentXrm.Page.getAttribute("parentcontactid").getValue()[0].name;
                 contactId = parentXrm.Page.getAttribute("parentcontactid").getValue()[0].id.replace("{", "").replace("}", "");
             }
-            if (parentXrm.Page.getAttribute("name") != undefined && parentXrm.Page.getAttribute("name") != null && parentXrm.Page.getAttribute("name") != "") {
+            if (parentXrm.Page.getAttribute("name").getValue() != undefined && parentXrm.Page.getAttribute("name").getValue() != null && parentXrm.Page.getAttribute("name").getValue() != "") {
                 recordName = parentXrm.Page.getAttribute("name").getValue();
             }
+            if(parentXrm.Page.getAttribute("parentaccountid").getValue()!=undefined && parentXrm.Page.getAttribute("parentaccountid").getValue()!=null && parentXrm.Page.getAttribute("parentaccountid").getValue()!="")
+            {
+                this.defaultData.contact.accountName=parentXrm.Page.getAttribute("parentaccountid").getValue()[0].name;
+                let accountId=parentXrm.Page.getAttribute("parentaccountid").getValue()[0].id.replace("{", "").replace("}", "");
+                this.defaultData.contact.industry=this.getIndustory(accountId);
+            }
             contactName = name;
-            //Contact Email Address for opportunity
+            let contactTitle="";
+            //Contact Email and Contact Title Address for opportunity
             var req = new XMLHttpRequest();
-            req.open("GET", parentXrm.Page.context.getClientUrl() + "/api/data/v9.1/contacts("+contactId+")?$select=emailaddress1", false);
+            req.open("GET", parentXrm.Page.context.getClientUrl() + "/api/data/v9.1/contacts("+contactId+")?$select=emailaddress1,jobtitle", false);
             req.setRequestHeader("OData-MaxVersion", "4.0");
             req.setRequestHeader("OData-Version", "4.0");
             req.setRequestHeader("Accept", "application/json");
@@ -168,12 +187,18 @@ export class DynamicCRMInfo {
                     if (this.status === 200) {
                         var result = JSON.parse(this.response);
                         email= result["emailaddress1"];
+                        contactTitle=result["jobtitle"];
                     } else {
                         parentXrm.Utility.alertDialog(this.statusText);
                     }
                 }
             };
             req.send();
+
+            if(contactTitle!=null && contactTitle!="")
+            {
+              this.defaultData.contact.contactTitle=contactTitle;
+            }
         }
 
 
@@ -195,7 +220,34 @@ export class DynamicCRMInfo {
             recordName: recordName
         }
     }
-
+     
+    getIndustory(accountId)
+    {
+        let parentXrm = (<any>window.parent).Xrm;
+        let industry="";
+        var req = new XMLHttpRequest();
+        req.open("GET", parentXrm.Page.context.getClientUrl() + "/api/data/v9.1/accounts("+accountId+")?$select=industrycode", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+        req.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var result = JSON.parse(this.response);
+                    var industrycode = result["industrycode"];
+                    industry = result["industrycode@OData.Community.Display.V1.FormattedValue"];
+                } else {
+                    parentXrm.Utility.alertDialog(this.statusText);
+                }
+            }
+        };
+        req.send();
+        
+        return industry;
+    }
     //Nazish - Updating activity while copying the record
     updateActivity(regards, subject, description) {
 
@@ -276,6 +328,7 @@ export class DynamicCRMInfo {
             this.getCurrentUser();
             this.getCurrentEntity();
             this.getAPIKey();
+            this.defaultData.contact.dynamicsURL=this.GetDynamicsURL();
         }
         else {
             this.apiKey = NEWSCRED_CONSTANTS.authHeader;
@@ -319,6 +372,7 @@ export class DynamicCRMInfo {
         let parentXrm = (<any>window.parent).Xrm;
         let accountId = parentXrm.Page.data.entity.getId();
         var req = new XMLHttpRequest();
+        var dynamicsbaseURL = parentXrm.Page.context.getClientUrl() + "/main.aspx?pagetype=entityrecord&etn=contact&id="
       
         req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/contacts?$select=_accountid_value,contactid,emailaddress1,fullname,jobtitle&$filter=_accountid_value eq "+ accountId, false);
         req.setRequestHeader("OData-MaxVersion", "4.0");
@@ -335,14 +389,17 @@ export class DynamicCRMInfo {
                         var _accountid_value = results.value[i]["_accountid_value"];
                         var _accountid_value_formatted = results.value[i]["_accountid_value@OData.Community.Display.V1.FormattedValue"];
                         var _accountid_value_lookuplogicalname = results.value[i]["_accountid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
                         var contactid = results.value[i]["contactid"];
                         var emailaddress1 = results.value[i]["emailaddress1"];
                         var fullname = results.value[i]["fullname"];
                         var jobtitle = results.value[i]["jobtitle"];
                         if(i < (Number(results.value.length) - 1))
-                        body += "{\"contactPageUrl\":\""+ NEWSCRED_CONSTANTS.baseUrlAnalytics + "/" + contactid + "\",\"email\":\""+ emailaddress1 +"\",\"id\":\"" + contactid +"\",\"name\":\""+ fullname +"\",\"title\":\"" + jobtitle +"\"},";
+                        //body += "{\"contactPageUrl\":\""+ NEWSCRED_CONSTANTS.baseUrlAnalytics + "/" + contactid + "\",\"email\":\""+ emailaddress1 +"\",\"id\":\"" + contactid +"\",\"name\":\""+ fullname +"\",\"title\":\"" + jobtitle +"\"},";
+                        body += "{\"contactPageUrl\":\""+ dynamicsbaseURL  + contactid + "\",\"email\":\""+ emailaddress1 +"\",\"id\":\"" + contactid +"\",\"name\":\""+ fullname +"\",\"title\":\"" + jobtitle +"\"},";
                         else
-                        body += "{\"contactPageUrl\":\""+ NEWSCRED_CONSTANTS.baseUrlAnalytics + "/" + contactid + "\",\"email\":\""+ emailaddress1 +"\",\"id\":\"" + contactid +"\",\"name\":\""+ fullname +"\",\"title\":\"" + jobtitle +"\"}";
+                        //body += "{\"contactPageUrl\":\""+ NEWSCRED_CONSTANTS.baseUrlAnalytics + "/" + contactid + "\",\"email\":\""+ emailaddress1 +"\",\"id\":\"" + contactid +"\",\"name\":\""+ fullname +"\",\"title\":\"" + jobtitle +"\"}";
+                        body += "{\"contactPageUrl\":\""+ dynamicsbaseURL + contactid + "\",\"email\":\""+ emailaddress1 +"\",\"id\":\"" + contactid +"\",\"name\":\""+ fullname +"\",\"title\":\"" + jobtitle +"\"}";
                     }
                     body += "]}";
                     

@@ -7,16 +7,16 @@
               <a type="button" class="button small black-button dropdown-toggle  " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{selectCategoryName}}
               </a>
-              <div class="dropdown-menu dropdown-menu-right">
+              <div class="categorydropdown dropdown-menu dropdown-menu-right">
                 <div  *ngFor="let category of categories" class="dropdown-item-wrapper" >
-                    <a class="dropdown-item" href="#" (click)="getArticlesBasedOnCategory(category.guid,category.name)">{{category.name}}</a>
+                    <a class="categorydropdownitem dropdown-item" href="#" (click)="getArticlesBasedOnCategory(category.guid,category.name)">{{category.name}}</a>
                    
                 </div>
               
               </div>
             </div>
           </div>                                       
-          <div class="p-2">
+          <div class="caraouselview  p-2" >
              <div class="carousel-control-prev" role="button" data-slide="prev" (click)="backward()">
                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                <span class="sr-only">Previous</span>
@@ -28,10 +28,10 @@
             </div>
           </div>
            
-      <owl-carousel
-        [options]="{responsive:{'320':{items:2},'600':{items:3},'980':{items:3},'1100':{ items:4}},mouseDrag:false, loop: false, dots: false, autoplay: false,nav: false, slideBy: 4}"
+      <owl-carousel  (mousewheel)="mousewheelowl($event)"
+      [options]="{ responsiveClass: true,stagePadding: 25,responsive:{'0':{items:1},'600':{items:2},'980':{items:3},'1100':{ items:4}}, loop: false, mouseDrag:true, dots: false, autoplay: false,nav: false, slideBy: 4}"
         [items]="articles"
-        [carouselClasses]="['owl-theme', 'row', 'sliding']" >
+        [carouselClasses]="['content-carousel','owl-theme', 'row', 'sliding']" >
         <div class="card-deck mt-4 mb-4"  *ngFor="let article of articles">
         <div class="card">
             <a href="{{article.link}}" target="_blank">
@@ -55,8 +55,8 @@
             </div>
           </div>
           <div class="card-body">
-            <h5 class="card-title">{{article.title | slice:0:75}}</h5>
-            <p class="card-text">{{article.body | slice:0:90}}</p>
+            <h5 class="card-title">{{article.title | slice:0:65}}</h5>
+            <p class="card-text">{{article.body | slice:0:72}}</p>
           </div>
           <div class="card-footer">
             <!-- Based on <strong class="text-uppercase">{{article.reason}}</strong> -->

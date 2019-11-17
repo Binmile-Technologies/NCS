@@ -31,11 +31,12 @@
 <app-recommended-content (recommendedArticlesChanged)="handleSelectionChange($event,1)" [selectedArticles] = "articles" [isUsed]="isUsed"></app-recommended-content>
 </div>
 <div class="tab-pane  fade" id="menu1">
-<app-content-library (contentLibraryChanged)="handleSelectionChange($event,2)"  [selectedContents] = "contents" [isUsed]="isUsed"></app-content-library>
+<app-content-library  [data]="ShowContentTab" (contentLibraryChanged)="handleSelectionChange($event,2)"  [selectedContents] = "contents" [isUsed]="isUsed"></app-content-library>
 </div>
-<div class="tab-pane  fade" id="menu2">
+<div class="tab-pane  fade" id="menu2" >
 <app-search (searchSelectionChanged)="handleSelectionChange($event,3)" [searchSelectedContent]="search" [isUsed]="isUsed"></app-search>
 </div>
 </div>
-<div *ngIf="isCopied" class="pop-toast" id="divCopied">Copied {{count}} to clipboard</div>
+<!-- <div *ngIf="isCopied" class="pop-toast" id="divCopied">Copied {{count}} to clipboard</div> -->
+<div  class="pop-toast" id="divCopied" style="visibility: hidden;">Copied {{count}} to clipboard</div>
 

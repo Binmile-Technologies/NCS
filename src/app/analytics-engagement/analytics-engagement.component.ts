@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NewsCredAPI } from '../../services/newsCredAPI';
 import { AnalyticsModel } from '../model/Analytics';
 import { zip } from "rxjs";
+declare var $: any;
 
 @Component({
   selector: 'app-analytics-engagement',
@@ -69,7 +70,17 @@ export class AnalyticsEngagementComponent implements OnInit {
     this.fetchingData = false;
     let totalContactsInGroup = 0;
     this.columns = [totalCol];
-    
+   if(this.rows[0]['model'].length >0)
+   {
+    $("#divEngagement").css("visibility", "visible");
+    $("#divNoEngagement").css("visibility", "hidden");
+   } 
+   else
+   {
+    $("#divNoEngagement").css("visibility", "visible");
+    $("#divEngagement").css("visibility", "hidden");
+   
+   }
    
     this.rows.forEach(row => {
 

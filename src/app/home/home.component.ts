@@ -15,6 +15,7 @@ declare var $: any;
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  public ShowContentTab: String;
   public static RecommendationTabType = 1;
   public static ContentTabType = 2;
   public static SearchTabType = 3;
@@ -68,22 +69,6 @@ export class HomeComponent implements OnInit {
     else
       this.APIKey = NEWSCRED_CONSTANTS.authHeader;
 
-    // if (this.EntityName == 'contact') {
-    //   if (this.APIKey != null && this.APIKey != "") {
-    //     this.router.navigate(['/']);
-    //   }
-    //   else {
-    //     this.router.navigate(['/apikey']);
-    //   }
-    // }
-    // else if (this.EntityName == 'opportunity') {
-    //   if (this.APIKey != null && this.APIKey != "") {
-    //     this.router.navigate(['/']);
-    //   }
-    //   else {
-    //     this.router.navigate(['/apikey']);
-    //   }
-    // }
     if (this.EntityName == 'account') {
       if (this.APIKey != null && this.APIKey != "") {
         this.router.navigate(['/analytics']);
@@ -100,9 +85,16 @@ export class HomeComponent implements OnInit {
     let selectedArticles=[];
     selectedArticles = this.clipboardArticles;
     this.count=0;
-
+    
+    this.count = this.selectedArticles.length;
+    //this.isCopied = true;
+    $("#divCopied").css("visibility", "visible");
     for(let i=0; i<this.selectedArticles.length; i++)
     {
+      //Calling is used api for the specific url
+      this.isUsed.push(selectedArticles[i].guid);
+      this.uncheckAll(this.activeTab, this.isUsed);
+      
     // Creating plain text links
       if(i==0) 
         atrticleText+=`${this.newsCredConstants.baseUrl}/${this.newsCredConstants.usedArticlesEndpoint}/${this.selectedArticles[i].guid}/${this.currentUserID}/${this.recordId}`;
@@ -128,21 +120,21 @@ export class HomeComponent implements OnInit {
       articleHTML+='</tbody>';
       articleHTML+='</table>';
       articleHTML+='<br>';
-      this.count++;
-      //Calling is used api for the specific url
-      this.isCopied = true;
+     // this.count++;
+      
       this.apiService.postUsedArticle(selectedArticles[i].guid, this.recordId, this.currentUserID)
       .subscribe((data)=>{
-        if(data["use_id"]!=undefined && data["use_id"]!=null)
-       {
-         this.isUsed.push(selectedArticles[i].guid);
-         this.uncheckAll(this.activeTab, this.isUsed);
-       }
+        // if(data["use_id"]!=undefined && data["use_id"]!=null)
+        //  {
+        //  this.isUsed.push(selectedArticles[i].guid);
+        //  this.uncheckAll(this.activeTab, this.isUsed);
+        //  }
       });
-      setTimeout(() => {
-        this.isCopied = false;
-      }, 2000); 
+     
     }
+    setTimeout(() => {
+      $("#divCopied").css("visibility", "hidden");
+    }, 2000);
     //copying the text
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -163,7 +155,7 @@ export class HomeComponent implements OnInit {
     //document.body.removeChild(selBox);
     let subject=this.dynamicCRMInfo.getCurrentUser().name+" copied "+this.count+" Links for "+this.contactName;
     this.dynamicCRMInfo.updateActivity(this.dynamicCRMInfo.getCurrectRecord().id, subject, atrticleText);
-   
+     
   }
 
   uncheckAll(cb, used){
@@ -196,6 +188,7 @@ export class HomeComponent implements OnInit {
       case(HomeComponent.ContentTabType):
       this.clipboardArticles = this.contents;
       this.activeTab="cb2";
+      this.ShowContentTab = "Show";
       break;
       case(HomeComponent.SearchTabType):
       this.clipboardArticles = this.search;
@@ -297,13 +290,6 @@ export class HomeComponent implements OnInit {
     console.log(this.clipboardArticles)
   }
 
-  ngAfterContentInit()
-  {
-    $("owl-nav disabled").remove();
-  }
-
-  ngAfterViewInit() {
-    $('.owl-nav disabled').remove();
-  }
+ 
 
 }

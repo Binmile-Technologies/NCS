@@ -1,4 +1,8 @@
-<div class="contact-analytics">
+<div id="divNoContact" style="visibility: hidden;">
+  There is no data to display.
+  </div>
+  
+<div class="contact-analytics" id="divContact" style="visibility: hidden;">
       
       
   <div class="table-outer-wrapper" ng-if="!fetchingData">
@@ -15,12 +19,19 @@
             <td *ngFor="let col of row">
               
               <p class="contact-url" *ngIf="col.name" >
-                <a style="cursor: pointer" (click)="fetchContactDetails(col.id)"  >
-                  {{col.name}} ({{col.read_contents.length}} <span class="highlight">of {{col.sent_contents.length}}</span>)
-                </a>
+                  <a style="cursor: pointer" (click)="fetchContactDetails(col.id)" *ngIf="col.read_contents.length == 0 && col.sent_contents.length; else nonclickable" >
+                      {{col.name}} ({{col.read_contents.length}} <span class="highlight">of {{col.sent_contents.length}}</span>)
+                    </a>
+                  <ng-template #nonclickable>
+                      <a class="linkdisabled">
+                          {{col.name}} ({{col.read_contents.length}} <span class="highlight">of {{col.sent_contents.length}}</span>)
+                        </a>
+                      
+                    </ng-template>
+              
                 
               </p>
-              <jw-modal id="contactdetails">
+              <jw-modal id="contactdetails" >
                 <table class="table table-bordered" cellspacing="0" cellpadding="0" border="1">
                   <thead>
                   <tr>

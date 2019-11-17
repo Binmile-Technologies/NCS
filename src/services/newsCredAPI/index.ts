@@ -35,7 +35,7 @@ export class NewsCredAPI{
 
   fields=[]
   public getRecommendedArticles(recordId:number, currentUserID:number):Observable<any>{
-    const field_values = {"fieldName":"Contact.Title"};
+    const field_values = {"fieldName":"Contact.Title", "value":this.dynamicCRMInfo.defaultData.contact.contactTitle};
     let url = `${this.newsCredConstants.baseUrl}/${NewsCredAPI.recommendedArticlesEndpoint}`
     let params = {
       account: this.dynamicCRMInfo.defaultData.contact.accountName,
@@ -87,6 +87,7 @@ public searchArticles(query: string):Observable<any>{
 // - fetching the contact id from NewsCred
 public getRecordIdFromNewsCred():Promise<any>{
  let url=`${this.newsCredConstants.baseUrl}/${NewsCredAPI.getContactIdEndpoint}/${this.dynamicCRMInfo.defaultData.contact.id}`
+ //let url = `${this.newsCredConstants.baseUrl}/${NewsCredAPI.getContactIdEndpoint}/${this.dynamicCRMInfo.defaultData.contact.dynamicsURL+ "/main.aspx?pagetype=entityrecord&etn=contact&id="+ this.dynamicCRMInfo.defaultData.contact.id}`
  let params = {
   contact_email: this.dynamicCRMInfo.defaultData.contact.email,
   contact_name: this.dynamicCRMInfo.defaultData.contact.name

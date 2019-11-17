@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NewsCredAPI } from '../../services/newsCredAPI';
 import { zip } from "rxjs";
+declare var $: any;
 
 @Component({
   selector: 'app-analytics-content',
@@ -12,7 +13,7 @@ export class AnalyticsContentComponent implements OnInit {
   loggedInUser:string;
   rows: any = [];
   fetchingData: boolean;
-  columns: any = [];
+  columns: any = ['Content'];
   contactGroups : any = [];
   constructor(private apiService: NewsCredAPI) { }
 
@@ -27,6 +28,17 @@ export class AnalyticsContentComponent implements OnInit {
 
   _formatTableData(response)
   {
+    if(response.length >0)
+    {
+     $("#divContent").css("visibility", "visible");
+     $("#divNoContent").css("visibility", "hidden");
+    } 
+    else
+    {
+     $("#divNoContent").css("visibility", "visible");
+     $("#divContent").css("visibility", "hidden");
+    
+    }
     for (var i = 0; i < response.length; i++) {
       var contact = response[i];
       var columnName = contact['contact_group_title'];

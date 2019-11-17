@@ -57,6 +57,7 @@ export class ApikeyComponent implements OnInit {
 
   ngAfterViewInit() {
     this.modalService.open('analyticsapikey');
+   
   }
 
   openmodal(id) {

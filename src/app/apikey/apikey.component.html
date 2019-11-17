@@ -22,7 +22,7 @@
                 <h5>Provide API key to proceed</h5>
                 <p>API key can be found under Settings > Organization in NewsCred CMP</p>
               </div>
-              <div class="input-wrapper">
+              <div class="input-wrapper" >
                     <input id="inputkey" type="text" class="search-input input-text" ngModel="{{APIKey}}" required >
                     <a class="button search-input-btn button small" ngClass="{disabled: isWorking || input.error || input.apiKey.length === 0}" (click)="saveApiKey()">Submit</a>
                   </div>

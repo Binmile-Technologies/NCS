@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { OwlCarousel } from 'ngx-owl-carousel';
 
+declare var $: any;
+
 @Component({
     selector: 'article-card-slider',
     templateUrl: './slider.html',
@@ -14,6 +16,7 @@ import { OwlCarousel } from 'ngx-owl-carousel';
     carouselClasses = ['owl-theme', 'row', 'sliding']
     // @Output() contentLibraryChanged = new EventEmitter<string[]>();
     @Output() searchSelectionChanged = new EventEmitter<any>();
+    @Output() mousewheelevent = new EventEmitter<any>();
     @Input("selectedContents") selectedContents = [];
     constructor() { }
     ngOnInit() {
@@ -34,4 +37,24 @@ import { OwlCarousel } from 'ngx-owl-carousel';
       }
       this.searchSelectionChanged.emit(this.selectedContents); 
     }
+
+    mousewheelowl(e)
+    {
+      if (e.deltaY > 0) {
+        this.forward();
+      } else {
+        this.backward();
+      }
+     e.preventDefault();
+    }
+
+    forward(){
+      $('.' + this.carouselId).trigger('next.owl.carousel');
+    }
+    backward()
+    {
+      $('.' + this.carouselId).trigger('prev.owl.carousel');
+    }
+
+   
 }
