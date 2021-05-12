@@ -21,7 +21,7 @@
     "@angular/router": "~8.2.4",
     "@types/xrm": "^9.0.14",
     "angular-bootstrap-md": "^8.2.0",
-    "chart.js": "^2.5.0",
+    "chart.js": "^2.9.4",
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "ngx-clipboard": "^12.2.1",
